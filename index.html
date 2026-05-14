@@ -3,7 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-    <!-- 1. PREVENCIÓN DE ZOOM EN IOS Y CONFIGURACIÓN PARA SAFE AREAS -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>SNI Gestión de Tickets</title>
     
@@ -11,12 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> 
     
     <style>
-        /* --- Configuración Global --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
             --primary: #3b82f6;
@@ -29,21 +23,20 @@
             font-family: '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg);
             color: var(--text);
-            /* 2. SOPORTE PARA SAFE AREAS (Muescas/Notch de iPhones) */
             padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-            /* Fallback para navegadores antiguos */
             padding-top: max(15px, env(safe-area-inset-top));
         }
 
-        /* --- Estilos del Login --- */
+        /* --- Estilos del Login Corregidos --- */
         #loginOverlay {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0; 
+            width: 100%; height: 100%;
             background: #f3f4f6;
-            display: flex;
+            display: flex; /* Asegura que se vea al inicio */
             justify-content: center;
             align-items: center;
-            z-index: 10000;
+            z-index: 99999; /* Prioridad máxima sobre todo */
         }
 
         .login-box {
@@ -51,13 +44,12 @@
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            width: 100%;
+            width: 90%;
             max-width: 350px;
             text-align: center;
         }
 
-        .login-box h2 { margin-bottom: 20px; color: var(--text); }
-        
+        .login-box h2 { margin-bottom: 20px; font-size: 1.2rem; }
         .login-box input {
             width: 100%;
             padding: 12px;
@@ -65,6 +57,7 @@
             border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 16px;
+            outline: none;
         }
 
         .login-box button {
@@ -79,148 +72,48 @@
             font-size: 16px;
         }
 
-        #mainContent { display: none; } /* Oculto hasta el login */
-
-        /* --- Resto de tus estilos originales --- */
+        /* --- Estilos originales --- */
         .container { max-width: 1400px; margin: 0 auto; }
-
-        .controls-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .search-container { 
-            position: relative; 
-            flex: 1; 
-            min-width: 250px; 
-        }
-
-        .search-container i { 
-            position: absolute; 
-            left: 15px; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            color: #9ca3af; 
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 15px 12px 45px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            font-size: 16px; 
-            outline: none;
-            height: 45px;
-        }
-
-        .filter-select-main {
-            padding: 0 35px 0 15px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: white;
-            font-weight: 600;
-            cursor: pointer;
-            height: 45px;
-            min-width: 200px;
-            font-size: 16px;
-            -webkit-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 1em;
-        }
-
-        .table-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            margin-bottom: 50px;
-            border-top: 4px solid var(--primary);
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-        }
-
+        .controls-row { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; align-items: center; }
+        .search-container { position: relative; flex: 1; min-width: 250px; }
+        .search-container i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #9ca3af; }
+        .search-input { width: 100%; padding: 12px 15px 12px 45px; border-radius: 10px; border: 1px solid var(--border); font-size: 16px; outline: none; height: 45px; }
+        .filter-select-main { padding: 0 35px 0 15px; border-radius: 10px; border: 1px solid var(--border); background: white; font-weight: 600; cursor: pointer; height: 45px; min-width: 200px; font-size: 16px; -webkit-appearance: none; appearance: none; background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; background-size: 1em; }
+        .table-card { background: white; border-radius: 12px; padding: 25px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); margin-bottom: 50px; border-top: 4px solid var(--primary); width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
         table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 600px; }
         th { background: #f9fafb; text-align: left; padding: 12px; border-bottom: 2px solid #edf2f7; color: #6b7280; }
         td { padding: 12px; border-bottom: 1px solid #edf2f7; }
-
-        .time-input, .resolver-select { 
-            padding: 8px 5px; 
-            border-radius: 5px; 
-            border: 1px solid var(--border); 
-            font-size: 16px;
-        }
-        
-        .resolver-select {
-            -webkit-appearance: none;
-            appearance: none;
-            background-color: white;
-        }
-        
-        .time-input:disabled, .resolver-select:disabled { background-color: #f3f4f6; cursor: not-allowed; color: #6b7280; }
-
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 10px;
-            text-transform: uppercase;
-            display: inline-block;
-            text-align: center;
-            min-width: 90px;
-        }
+        .time-input, .resolver-select { padding: 8px 5px; border-radius: 5px; border: 1px solid var(--border); font-size: 16px; }
+        .status-badge { padding: 6px 12px; border-radius: 20px; font-weight: 700; font-size: 10px; text-transform: uppercase; display: inline-block; text-align: center; min-width: 90px; }
         .status-atendido { background-color: #dcfce7; color: #166534; border: 1px solid #166534; }
         .status-en-proceso { background-color: #dbeafe; color: #1e40af; border: 1px solid #1e40af; }
         .status-retrasado { background-color: #fef3c7; color: #92400e; border: 1px solid #92400e; }
         .status-no-atendido { background-color: #fee2e2; color: #991b1b; border: 1px solid #991b1b; }
-
-        .badge-depto {
-            padding: 4px 10px;
-            border-radius: 6px;
-            color: white;
-            font-weight: 600;
-            font-size: 11px;
-            white-space: nowrap;
-        }
+        .badge-depto { padding: 4px 10px; border-radius: 6px; color: white; font-weight: 600; font-size: 11px; white-space: nowrap; }
 
         @media (max-width: 950px) {
             .search-container, .filter-select-main { flex: 1 1 100%; }
-            .table-card { padding: 15px 10px; }
-            
-            th:nth-child(2), td:nth-child(2),
-            th:nth-child(4), td:nth-child(4),
-            th:nth-child(5), td:nth-child(5),
-            th:nth-child(6), td:nth-child(6),
-            th:nth-child(8), td:nth-child(8) { 
-                display: none; 
-            }
-            table { min-width: auto; }
+            th:nth-child(2), td:nth-child(2), th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6), th:nth-child(8), td:nth-child(8) { display: none; }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- VENTANA DE LOGIN -->
+    <!-- PANTALLA DE LOGIN -->
     <div id="loginOverlay">
         <div class="login-box">
-            <i class="fas fa-lock" style="font-size: 40px; color: var(--primary); margin-bottom: 20px;"></i>
-            <h2>Acceso Administrativo</h2>
+            <i class="fas fa-user-shield" style="font-size: 40px; color: var(--primary); margin-bottom: 15px;"></i>
+            <h2>SNI Acceso</h2>
             <input type="text" id="userInput" placeholder="Usuario">
             <input type="password" id="passInput" placeholder="Contraseña">
-            <button onclick="validarAcceso()">Entrar</button>
-            <p id="errorMsg" style="color: #991b1b; font-size: 12px; margin-top: 15px; display: none;">Usuario o contraseña incorrectos</p>
+            <button onclick="validarAcceso()">Ingresar</button>
+            <p id="errorMsg" style="color: #991b1b; font-size: 13px; margin-top: 15px; display: none;">Credenciales incorrectas</p>
         </div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
-    <div id="mainContent" class="container">
+    <!-- CONTENIDO (Forzado a estar oculto al inicio con style="display:none") -->
+    <div id="mainContent" class="container" style="display: none;">
         <div class="controls-row">
             <div class="search-container">
                 <i class="fas fa-search"></i>
@@ -236,12 +129,12 @@
         </div>
 
         <div class="table-card">
-            <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+            <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 20px;">
                 <h2 style="margin:0; font-size: 1.2rem;"><i class="fas fa-tasks" style="color: var(--primary);"></i> SNI Gestión de Tickets</h2>
                 <small id="lastUpdate" style="color: #6b7280; font-size: 12px;"></small>
             </div>
             
-            <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 10px;">
+            <div style="overflow-x: auto; -webkit-overflow-scrolling: touch;">
                 <table>
                     <thead>
                         <tr>
@@ -267,12 +160,12 @@
     </div>
 
     <script>
-        // Función de validación de Login
+        // Función de validación
         function validarAcceso() {
-            const user = document.getElementById('userInput').value;
-            const pass = document.getElementById('passInput').value;
+            const u = document.getElementById('userInput').value;
+            const p = document.getElementById('passInput').value;
 
-            if (user === "Administrador" && pass === "DepartamentoSistemas140526") {
+            if (u === "Administrador" && p === "DepartamentoSistemas140526") {
                 document.getElementById('loginOverlay').style.display = 'none';
                 document.getElementById('mainContent').style.display = 'block';
             } else {
@@ -291,10 +184,7 @@
         let allTickets = [];
         let myChart = null;
 
-        function normalizarTexto(texto) {
-            return texto ? texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim() : "";
-        }
-
+        function normalizarTexto(texto) { return texto ? texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim() : ""; }
         function getDeptoColor(name) {
             const key = normalizarTexto(name);
             if (colorPalette[key]) return colorPalette[key];
@@ -305,67 +195,50 @@
 
         function calcularDuracion(inicio, fin) {
             if (!inicio || !fin || fin === "" || fin === "--:--") return null;
-            try {
-                const [h1, m1] = inicio.split(':').map(Number);
-                const [h2, m2] = fin.split(':').map(Number);
-                let startTotal = h1 * 60 + m1;
-                let endTotal = h2 * 60 + m2;
-                if (endTotal < startTotal) endTotal += 1440;
-                const diff = endTotal - startTotal;
-                const hours = Math.floor(diff / 60);
-                const minutes = diff % 60;
-                return { formatted: hours > 0 ? `${hours}h ${minutes}m` : `${minutes} min` };
-            } catch (e) { return null; }
+            const [h1, m1] = inicio.split(':').map(Number);
+            const [h2, m2] = fin.split(':').map(Number);
+            let startTotal = h1 * 60 + m1;
+            let endTotal = h2 * 60 + m2;
+            if (endTotal < startTotal) endTotal += 1440;
+            const diff = endTotal - startTotal;
+            return { formatted: diff >= 60 ? `${Math.floor(diff/60)}h ${diff%60}m` : `${diff} min` };
         }
 
         function calcularEstatus(v) {
-            const hFin = v.hora_fin ? v.hora_fin.trim() : "";
-            if (/^[0-9]{1,2}:[0-9]{2}/.test(hFin)) return "Atendido";
+            if (/^[0-9]{1,2}:[0-9]{2}/.test(v.hora_fin?.trim())) return "Atendido";
             const fechaRef = v.fecha_registro?.toDate ? v.fecha_registro.toDate() : new Date(v.fecha_registro);
-            const diferenciaHoras = (new Date() - fechaRef) / (1000 * 60 * 60);
-            if (diferenciaHoras > 72) return "No atendido";
-            if (diferenciaHoras > 48) return "Retrasado";
-            return "En proceso";
+            const diff = (new Date() - fechaRef) / (1000 * 60 * 60);
+            return diff > 72 ? "No atendido" : diff > 48 ? "Retrasado" : "En proceso";
         }
 
-        function getStatusClass(status) {
-            const classes = { 'Atendido': 'status-atendido', 'En proceso': 'status-en-proceso', 'Retrasado': 'status-retrasado', 'No atendido': 'status-no-atendido' };
-            return classes[status] || 'status-en-proceso';
+        function getStatusClass(s) {
+            return { 'Atendido': 'status-atendido', 'En proceso': 'status-en-proceso', 'Retrasado': 'status-retrasado', 'No atendido': 'status-no-atendido' }[s] || 'status-en-proceso';
         }
 
         function filtrarTickets() {
-            const searchText = document.getElementById('searchInput').value.toLowerCase();
-            const filterStatus = document.getElementById('statusFilter').value;
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const statusF = document.getElementById('statusFilter').value;
             const tbody = document.getElementById('body-1');
             tbody.innerHTML = "";
 
             let filtered = allTickets.filter(t => {
-                const estatusAuto = calcularEstatus(t.data);
-                const matchText = (t.data.departamento || "").toLowerCase().includes(searchText) || (t.data.problema || "").toLowerCase().includes(searchText);
-                const matchStatus = (filterStatus === "todos") || (estatusAuto === filterStatus);
-                return matchText && matchStatus;
-            });
-
-            filtered.sort((a, b) => {
-                const pA = calcularEstatus(a.data) === "Atendido" ? 1 : 0;
-                const pB = calcularEstatus(b.data) === "Atendido" ? 1 : 0;
-                return pA - pB;
+                const est = calcularEstatus(t.data);
+                const matchT = (t.data.departamento || "").toLowerCase().includes(search) || (t.data.problema || "").toLowerCase().includes(search);
+                const matchS = (statusF === "todos") || (est === statusF);
+                return matchT && matchS;
             });
 
             filtered.forEach(t => {
-                const v = t.data;
-                const estatus = calcularEstatus(v);
-                const duracionObj = calcularDuracion(v.hora_inicio, v.hora_fin);
-                const colorDepto = getDeptoColor(v.departamento);
-                
+                const v = t.data; const est = calcularEstatus(v);
+                const dur = calcularDuracion(v.hora_inicio, v.hora_fin);
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td><span class="status-badge ${getStatusClass(estatus)}">${estatus}</span></td>
-                    <td><span class="badge-depto" style="background-color: ${colorDepto}">${v.departamento || 'N/A'}</span></td>
+                    <td><span class="status-badge ${getStatusClass(est)}">${est}</span></td>
+                    <td><span class="badge-depto" style="background-color: ${getDeptoColor(v.departamento)}">${v.departamento || 'N/A'}</span></td>
                     <td>${v.problema || '-'}</td>
-                    <td style="white-space: nowrap;">${v.hora_inicio || '-'}</td>
+                    <td>${v.hora_inicio || '-'}</td>
                     <td><input type="time" class="time-input" value="${v.hora_fin || ''}" onchange="actualizarHoraFin('${t.id}', this.value)"></td>
-                    <td style="font-weight: bold; color: var(--primary); white-space: nowrap;">${duracionObj ? duracionObj.formatted : '---'}</td>
+                    <td style="font-weight:bold; color:var(--primary)">${dur ? dur.formatted : '---'}</td>
                     <td>${v.quien_atendio || '-'}</td>
                     <td>
                         <select class="resolver-select" onchange="actualizarResolvio('${t.id}', this.value)" ${v.resolvio ? 'disabled' : ''}>
@@ -375,45 +248,25 @@
                             <option value="Francisco" ${v.resolvio === 'Francisco' ? 'selected' : ''}>Francisco</option>
                         </select>
                     </td>
-                    <td style="font-weight: bold; color: ${estatus === "Atendido" ? "#166534" : "#991b1b"};">${estatus === "Atendido" ? "Si" : "No"}</td>
-                `;
+                    <td style="font-weight:bold;">${est === "Atendido" ? "Si" : "No"}</td>`;
                 tbody.appendChild(row);
             });
             updateChart(filtered);
         }
 
-        function updateChart(dataList) {
-            const counts = {};
-            dataList.forEach(t => {
-                const d = t.data.departamento || 'N/A';
-                counts[d] = (counts[d] || 0) + 1;
-            });
-            const labels = Object.keys(counts);
-            const backgroundColors = labels.map(l => getDeptoColor(l));
+        function updateChart(list) {
+            const counts = {}; list.forEach(t => { const d = t.data.departamento || 'N/A'; counts[d] = (counts[d] || 0) + 1; });
             const ctx = document.getElementById('chart-1').getContext('2d');
             if (myChart) myChart.destroy();
             myChart = new Chart(ctx, {
                 type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: Object.values(counts),
-                        backgroundColor: backgroundColors,
-                        borderRadius: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
-                }
+                data: { labels: Object.keys(counts), datasets: [{ data: Object.values(counts), backgroundColor: Object.keys(counts).map(l => getDeptoColor(l)), borderRadius: 8 }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
     </script>
 
     <script type="module">
-        // 3. IMPORTACIÓN DE LA FUNCIÓN DE PERSISTENCIA
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
         import { getFirestore, collection, query, onSnapshot, orderBy, doc, updateDoc, enableIndexedDbPersistence } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
@@ -423,33 +276,19 @@
             projectId: "levantamiento-de-tickets-d40c1",
             storageBucket: "levantamiento-de-tickets-d40c1.firebasestorage.app",
             messagingSenderId: "914730801884",
-            appId: "1:914730801884:web:c7ddec1f1d17caa27e7219",
-            measurementId: "G-RVMWWVTY62"
+            appId: "1:914730801884:web:c7ddec1f1d17caa27e7219"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        enableIndexedDbPersistence(db).catch(() => {});
 
-        // ACTIVA LA PERSISTENCIA OFFLINE
-        enableIndexedDbPersistence(db).catch((err) => {
-            console.error("Error de persistencia:", err.code);
-        });
+        window.actualizarHoraFin = (id, v) => updateDoc(doc(db, "reportes", id), { hora_fin: v || "" });
+        window.actualizarResolvio = (id, v) => updateDoc(doc(db, "reportes", id), { resolvio: v || "" });
 
-        window.actualizarHoraFin = async (id, nuevaHora) => {
-            try {
-                await updateDoc(doc(db, "reportes", id), { hora_fin: nuevaHora || "" });
-            } catch (e) { console.error("Error al actualizar:", e); }
-        };
-
-        window.actualizarResolvio = async (id, nuevoNombre) => {
-            try {
-                await updateDoc(doc(db, "reportes", id), { resolvio: nuevoNombre || "" });
-            } catch (e) { console.error("Error al actualizar responsable:", e); }
-        };
-
-        onSnapshot(query(collection(db, "reportes"), orderBy("fecha_registro", "desc")), (snapshot) => {
+        onSnapshot(query(collection(db, "reportes"), orderBy("fecha_registro", "desc")), (snap) => {
             allTickets = [];
-            snapshot.forEach(doc => allTickets.push({ id: doc.id, data: doc.data() }));
+            snap.forEach(d => allTickets.push({ id: d.id, data: d.data() }));
             document.getElementById('lastUpdate').innerText = "Sincronizado: " + new Date().toLocaleTimeString();
             filtrarTickets();
         });
